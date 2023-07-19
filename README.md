@@ -1,2 +1,4 @@
 # based-library
-Project for practicing web development.
+*Project for practicing web development.*
+
+- JS Prototypes
