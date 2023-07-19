@@ -107,14 +107,14 @@ button {
   margin-top: 8px;
 }
 
-/* Main */
+/* Library */
 
-.main {
+.library {
   flex: 1;
   padding: 16px;
   background-color: white;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   align-content: start;
   gap: 16px;
 }
