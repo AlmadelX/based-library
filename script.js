@@ -45,19 +45,30 @@ function displayLibrary() {
       <div class="card-buttons">
         <button class="card-button-read">${book.read ? "Haven't read" : "Have read"}</button>
         <button class="card-button-remove">Remove</button>
-      </div>`; 
-    
-      const readButton = library.lastChild.querySelector(".card-button-read");
-      readButton.addEventListener("click", () => toggleReadStatus(readButton));
+      </div>`;
   }
+
+  // Add button event listeners
+  const readButtons = library.querySelectorAll(".card-button-read");
+  const removeButtons = library.querySelectorAll(".card-button-remove");
+  
+  readButtons.forEach(button => button.addEventListener("click", () => toggleReadStatus(button)));
+  removeButtons.forEach(button => button.addEventListener("click", () => removeBook(button)));
 }
 
 function toggleReadStatus(button) {
   const card = button.parentNode.parentNode;
-
   const bookIndex = card.getAttribute("data-index");
-  libraryContent[bookIndex].toggleReadStatus();
 
+  libraryContent[bookIndex].toggleReadStatus();
+  displayLibrary();
+}
+
+function removeBook(button) {
+  const card = button.parentNode.parentNode;
+  const bookIndex = card.getAttribute("data-index");
+
+  libraryContent.splice(bookIndex, 1);
   displayLibrary();
 }
 
@@ -89,5 +100,3 @@ form.addEventListener("submit", e => {
   e.preventDefault();
   updateLibrary();
 });
-
-readButtons.forEach(button => button.addEventListener("click", () => toggleReadStatus(button)));
