@@ -12,17 +12,19 @@ function updateLibrary() {
 function getFormData() {
   const formData = new FormData(form);
   form.reset();
+  toggleForm();
+
   const result = {};
   formData.forEach((value, key) => result[key] = value);
   return result;
 }
 
 function displayLibrary() {
-  toggleForm();
   library.textContent = "";
-  for (const book of libraryContent) {
+  for (let i = 0; i < libraryContent.length; ++i) {
+    const book = libraryContent[i];
     library.innerHTML += 
-      `<div class="card">
+      `<div class="card" data-index="${i}">
       <div class="card-info">
         <h2>${book.title}</h2>
         <div class="card-content">
@@ -41,10 +43,22 @@ function displayLibrary() {
         </div>
       </div>
       <div class="card-buttons">
-        <button class="card-button-read">Have read</button>
+        <button class="card-button-read">${book.read ? "Haven't read" : "Have read"}</button>
         <button class="card-button-remove">Remove</button>
       </div>`; 
+    
+      const readButton = library.lastChild.querySelector(".card-button-read");
+      readButton.addEventListener("click", () => toggleReadStatus(readButton));
   }
+}
+
+function toggleReadStatus(button) {
+  const card = button.parentNode.parentNode;
+
+  const bookIndex = card.getAttribute("data-index");
+  libraryContent[bookIndex].toggleReadStatus();
+
+  displayLibrary();
 }
 
 function Book(title, author, country, language, genre, pages) {
@@ -57,15 +71,23 @@ function Book(title, author, country, language, genre, pages) {
   this.read = false;
 }
 
+Book.prototype.toggleReadStatus = function() {
+  this.read = !this.read;
+}
+
 const showFormButton = document.querySelector("#show-form");
 const form = document.querySelector(".sidebar-form");
 const library = document.querySelector(".library");
+const readButtons = document.querySelectorAll(".card-button-read");
 
 let libraryContent = [];
 
 // Setup listeners
 showFormButton.addEventListener("click", toggleForm);
+
 form.addEventListener("submit", e => {
   e.preventDefault();
   updateLibrary();
 });
+
+readButtons.forEach(button => button.addEventListener("click", () => toggleReadStatus(button)));
